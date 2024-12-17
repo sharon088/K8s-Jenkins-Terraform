@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tf-k8s-jenkins
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tf-k8s-jenkins
+  template:
+    metadata:
+      labels:
+        app: tf-k8s-jenkins
+    spec:
+      containers:
+      - name: tf-k8s-jenkins
+        image: devopsgoofy/tf-k8s-jenkins:latest
+        ports:
+        - containerPort: 5000

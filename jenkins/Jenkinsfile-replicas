@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'REPLICA_COUNT', defaultValue: '1', description: 'Number of replicas to scale the Kubernetes deployment')
+    }
+
+    environment {
+        K8S_DEPLOYMENT_NAME = "tf-k8s-jenkins"
+        KUBECONFIG = credentials('kube_config')
+    }
+
+    stages {
+        stage('Scale Kubernetes Deployment') {
+            steps {
+                script {
+                    if (params.REPLICA_COUNT.isInteger() && params.REPLICA_COUNT.toInteger() > 0) {
+                        echo "Scaling Kubernetes deployment to ${params.REPLICA_COUNT} replicas."
+                        sh "kubectl scale deployment ${K8S_DEPLOYMENT_NAME} --replicas=${params.REPLICA_COUNT}"
+                    } else {
+                        error("REPLICA_COUNT must be a positive integer.")
+                    }
+                }
+            }
+        }
+    }
+}

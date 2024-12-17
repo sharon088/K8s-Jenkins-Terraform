@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2024-11-12T10:28:18Z"
+  name: goofy-lb-svc
+  namespace: default
+  resourceVersion: "4180"
+  uid: 5dccf8c8-5169-4f28-b9c8-498e4cc9c80f
+spec:
+  allocateLoadBalancerNodePorts: true
+  clusterIP: 10.103.57.115
+  clusterIPs:
+  - 10.103.57.115
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - nodePort: 31822
+    port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: tf-k8s-jenkins
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer: {}

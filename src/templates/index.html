@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hello World</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .neon {
+            font-size: 4rem;
+            color: #00FF00;
+            text-shadow: 
+                0 0 5px #00FF00, 
+                0 0 10px #00FF00, 
+                0 0 15px #00FF00, 
+                0 0 20px #00FF00, 
+                0 0 30px #00FF00, 
+                0 0 40px #00FF00, 
+                0 0 50px #00FF00;
+        }
+
+        .neon-border {
+            font-size: 3rem;
+            color: #fff;
+            border: 2px solid #00FF00;
+            padding: 20px;
+            border-radius: 10px;
+            text-shadow: 0 0 10px #00FF00;
+            margin-top: 20px;
+        }
+
+        @keyframes pulse {
+            0% {
+                background-color: #121212;
+            }
+            50% {
+                background-color: #1e1e1e;
+            }
+            100% {
+                background-color: #121212;
+            }
+        }
+
+        .container {
+            animation: pulse 3s infinite;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        img {
+            margin-top: 30px;
+            width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="neon">Terraform - Ansible - Kubernetes - GitLab - Jenkins</div>
+    <div class="neon-border">
+        <img src="https://cdn.prod.website-files.com/61bcfa6e82d1a9800fdaddf3/656f6742dd2de3aadca604fc_terraformlogo.png" alt="Terraform">
+        <img src="https://static-00.iconduck.com/assets.00/ansible-icon-512x512-o62vjrpd.png" alt="Ansible">
+        <img src="https://tecbrix.com/wp-content/uploads/2022/05/kubernetes.png" alt="Kubernetes">
+        <img src="https://img-resize-cdn.joshmartin.ch/768x0%2Cefb63b8c97838b1e69db0dc4597eba23bfeee9aa3c3cd2b0858ff7df6edf5eed/https://joshmartin.ch/app/uploads/2024/04/gitlab-logo-faa48efd02-seeklogo.com_.png" alt="GitLab">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Jenkins_logo.svg/1483px-Jenkins_logo.svg.png" alt="Jenkins">
+    </div>
+</div>
+
+</body>
+</html>

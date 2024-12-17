@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_REGISTRY = "docker.io/devopsgoofy"
+        DOCKER_IMAGE = "tf-k8s-jenkins"
+        K8S_NAMESPACE = "tf-k8s-jenkins"
+        K8S_DEPLOYMENT_NAME = "app-deployment"
+        K8S_INGRESS_NAME = "app-ingress"
+        dockerHubCredentials = 'dockerhub'
+        KUBECONFIG = credentials('kube_config')
+    }
+
+    stages {
+        stage('Build the Docker image from the GitLab repository') {
+            steps {
+                script {
+                    sh "sudo docker build -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_ID} ."
+                }
+            }
+        }
+
+        stage("Pushing app to Docker Hub") {
+            steps {
+                script {
+                    docker.withRegistry('', dockerHubCredentials) {
+                        sh "sudo docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_ID}"
+                        sh "sudo docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest"
+                    }
+                }
+            }
+        }
+
+        stage('Update Kubernetes Deployment ma man') {
+            steps {
+                script {
+                    def deploymentFile = readFile('deployment.yml')
+                    def updatedDeployment = deploymentFile.replaceAll("image: .*", "image: ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_ID}")
+                    writeFile file: 'deployment.yml', text: updatedDeployment
+                }
+            }
+        }
+
+        stage('Verify kubectl Connection') {
+            steps {
+                sh 'kubectl version --client'
+                sh 'kubectl config current-context'
+            }
+        }
+
+        stage('Apply new deployment') {
+            steps {
+                sh "kubectl apply -f deployment.yml"
+            }
+        }
+    }
+}

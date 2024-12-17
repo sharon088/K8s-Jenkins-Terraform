@@ -1,0 +1,23 @@
+all:
+  children:
+    gitlab:
+      hosts:
+        gitlab_host:
+          ansible_host: 18.199.99.151
+    jenkins:
+      hosts:
+        jenkins_controller:
+          ansible_host: 3.75.94.120
+        jenkins_agent:
+          ansible_host: 23.22.35.212
+    k8s_cluster:
+      hosts:
+        control_plane:
+          ansible_host: 52.57.11.100
+        k8s_worker1:
+          ansible_host: 3.79.104.27
+        k8s_worker2:
+          ansible_host: 52.59.195.235
+  vars:
+    ansible_ssh_private_key_file: /home/niv/InfinityLabs/DevOps/Projects/tf-k8s-jenkins/k8s.pem
+    ansible_user: ubuntu
