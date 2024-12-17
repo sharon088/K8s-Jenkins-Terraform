@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_REGISTRY = "docker.io/devopsgoofy"
+        DOCKER_REGISTRY = "docker.io/sharon088"
         DOCKER_IMAGE = "tf-k8s-jenkins"
         K8S_NAMESPACE = "tf-k8s-jenkins"
         K8S_DEPLOYMENT_NAME = "app-deployment"
