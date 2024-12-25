@@ -7,13 +7,13 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: goofy-1226583501.eu-central-1.elb.amazonaws.com
+  - host: sharon-1226583501.eu-central-1.elb.amazonaws.com
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: goofy-lb-svc
+            name: sharon-lb-svc
             port:
               number: 80
