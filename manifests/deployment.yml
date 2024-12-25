@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: tf-k8s-jenkins
-        image: devopsgoofy/tf-k8s-jenkins:latest
+        image: sharon088/tf-k8s-jenkins:latest
         ports:
         - containerPort: 5000
