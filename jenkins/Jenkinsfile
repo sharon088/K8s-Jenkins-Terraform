@@ -4,53 +4,47 @@ pipeline {
     environment {
         DOCKER_REGISTRY = "docker.io/sharon088"
         DOCKER_IMAGE = "tf-k8s-jenkins"
-        K8S_NAMESPACE = "tf-k8s-jenkins"
-        K8S_DEPLOYMENT_NAME = "app-deployment"
-        K8S_INGRESS_NAME = "app-ingress"
         dockerHubCredentials = 'dockerhub'
-        KUBECONFIG = credentials('kube_config')
     }
 
     stages {
-        stage('Build the Docker image from the GitLab repository') {
+        stage('Build the Docker image') {
             steps {
                 script {
-                    sh "sudo docker build -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_ID} ."
+                    // Using Docker layer caching
+                    sh "docker build --cache-from=${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_ID} ."
                 }
             }
         }
 
-        stage("Pushing app to Docker Hub") {
+        stage('Push Docker image') {
             steps {
                 script {
                     docker.withRegistry('', dockerHubCredentials) {
-                        sh "sudo docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_ID}"
-                        sh "sudo docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest"
+                        sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_ID}"
+                        sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest"
                     }
                 }
             }
         }
 
-        stage('Update Kubernetes Deployment ma man') {
+        stage('Update Kubernetes Deployment') {
             steps {
                 script {
-                    def deploymentFile = readFile('deployment.yml')
+                    def deploymentFile = readFile('manifests/deployment.yml')
                     def updatedDeployment = deploymentFile.replaceAll("image: .*", "image: ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_ID}")
-                    writeFile file: 'deployment.yml', text: updatedDeployment
+                    writeFile file: 'manifests/deployment.yml', text: updatedDeployment
                 }
             }
         }
 
-        stage('Verify kubectl Connection') {
+        stage('Deploy to Kubernetes') {
             steps {
-                sh 'kubectl version --client'
-                sh 'kubectl config current-context'
-            }
-        }
-
-        stage('Apply new deployment') {
-            steps {
-                sh "kubectl apply -f deployment.yml"
+                script {
+                    sh 'kubectl apply -f manifests/deployment.yml'
+                    sh 'kubectl apply -f manifests/service.yml'
+                    sh 'kubectl apply -f manifests/ingress.yml'
+                }
             }
         }
     }
